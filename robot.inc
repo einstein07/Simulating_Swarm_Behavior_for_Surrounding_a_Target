@@ -26,6 +26,16 @@ define robot_sonars ranger
   robot_sonar( pose [ 0.125 -0.25 0 -30]) #right corner
 )
 
+define robot_eyes blobfinder
+(
+	colors_count 2
+	colors ["green" "black"]
+	image [160 120] #resolution
+	range 5.00 		 # meters
+	fov 60 #fov (in unit_angle (degrees by def))
+)
+
+
 
 define robot position
 (
@@ -46,5 +56,11 @@ define robot position
 					 point[0] [0.375 0]
 					 z [0 0.5]
 		  )
+		#positional things
+		  drive "diff"
+
+		  #sensors attached to robot
+		  robot_sonars( ) 
+          	  robot_eyes( )
 
 )
