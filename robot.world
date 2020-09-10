@@ -1,7 +1,15 @@
-
+# robot.world
+# world for the robot
+# Author: Sindiso Mkhatshwa
+# Date: 10 - 09 - 2020
+#--------------------------------------------------------------------------
+#includes
+#--------------------------------------------------------------------------
 include "map.inc"
-include "bigbob.inc"
-
+include "robot.inc"
+#--------------------------------------------------------------------------
+#code
+#--------------------------------------------------------------------------
 # configure the GUI window
 window
 (
@@ -13,7 +21,7 @@ window
 # load in our robots
 robot
 (
-    name "bob1"
+    name "robot1"
     pose [-5 -6 0 45]
     color "green"
 )

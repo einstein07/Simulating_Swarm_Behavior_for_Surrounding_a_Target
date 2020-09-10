@@ -2,8 +2,10 @@
 # model for the robot "Robot"
 # Author: Sindiso Mkhatshwa
 # Date: 10 - 09 - 2020
-
-define robot sensor
+#--------------------------------------------------------------------------
+#code
+#--------------------------------------------------------------------------
+define robot_sonar sensor
 (
     # transducer size [xsize ysize zsize] in meters
     size [0.01 0.05 0.01 ] 
