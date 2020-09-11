@@ -19,9 +19,9 @@ namespace mkhsin035{
   private:
       std::vector<mkhsin035::robot> robots;
   public:
-      comms(std::vector<mkhsin035::robot> robots);
-      void broadcast(item_t *itemList, int listLength, playerc_simulation_t *sim, char *robot_name);
-      void receive();
+      void add(mkhsin035::robot r);
+      void broadcast(mkhsin035::robot& robo, double bc_x, double bc_y, double oil_spill_position_x, double oil_spill_position_y);
+      void receive(mkhsin035::robot, double& bc_x, double& bc_y, double& oil_spill_position_x, double& oil_spill_position_y);
   };  
   struct Item
 {

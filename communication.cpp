@@ -8,76 +8,83 @@
 //------------------------------------------------------------------------------
 //CODE
 //------------------------------------------------------------------------------
-void mkhsin035::comms::broadcast(item_t *itemList, int listLength, playerc_simulation_t *sim, char *robot_name)
+void mkhsin035::comms::broadcast(robot& robo, double bc_x, double bc_y, double oil_spill_position_x, double oil_spill_position_y)
 {
-    /*
-    This function works by creating a search area just
-    in front of the robot's teeth. The search circle is a
-    fixed distance in front of the robot, and has a 
-    fixed radius.
-    This function finds objects within this search circle
-    and then deletes the closest one.
-    */
-	
+    mkhsin035::pos robot_position;
+    mkhsin035::pos *other_robot_positions;
     //radius of the communication circle
     double radius = 1;
-      
-    //The distance from the centre of the robot to 
-    //the centre of the search circle
-      double distBotToCircle = 0;
-      double robotX, robotY, robotYaw;
-      double circleX, circleY;
+    double circleX, circleY;
       
     //find the robot...
-    playerc_simulation_get_pose2d(sim,robot_name, &robotX, &robotY, &robotYaw);
+    robot_position = robo.get_position();
+    double x_d = robot_position.x - robo.farthest_robot_x;
+    double y_d = robot_position.y - robo.farthest_robot_y;
+    robo.Df = (x_d*x_d) + (y_d * y_d);
+    robo.Df = sqrt(robo.Df);
+    
+    x = robot_position.x - robo.nearest_robot_x;
+    y = robot_position.y - robo.nearest_robot_y;
+    robo.Dn = (x*x) + (y * y);
+    robo.Dn = sqrt(robo.Dn);
     
     //get the poses of other robots in sim
     for(int i=0; i < 4; i++)
     {
-          char robot_str[] = "robot%d";
-          sprintf(this->robots[i].name, robots_str, i+1);
-          double dummy;  //dummy variable, don't need yaws.
-          playerc_simulation_get_pose2d(simProxy,itemList[i].name, \
-                &(itemList[i].x), &(itemList[i].y), &dummy);
+        other_robot_positions[i] = robots[i].get_position();
     }
     
-    //find actual centre relative to simulation.
-    circleX = robotX;
-    circleY = robotY;
+    //find actual center relative to simulation.
+    circleX = robot_position.x;
+    circleY = robot_position.y;
            
-      /* to find which items are within this circle we
-      find their Euclidian distance to the circle centre.
-      Find the closest one and if it's distance is smaller than
-      the circle radius then return its index */
-      
-      double smallestDist = 1000000;
-      int closestItem = 0; 
-      int i;
-      
-      for(i=0; i<listLength; i++)
-      {
+    for(int i=0; i<4; i++)
+        {
             double x, y, dist; 
             
-            // get manhattan distance from circle centre to item
-            x = circleX - itemList[i].x;
-            y = circleY - itemList[i].y;
+            //get distance from this robot to robot
+            x = circleX - other_robot_positions[i].x;
+            y = circleY - other_robot_positions[i].y;
             
-            //find euclidian distance from circle centre to item
+            //find euclidean distance from circle center to robot
             dist = (x*x) + (y*y);
             dist = sqrt(dist);
                         
-            if(dist < smallestDist)
+            if(dist < radius)
             {
-                  smallestDist = dist;
-                  closestItem = i;
+                if(other_robot_positions[i].x != robot_position.x && other_robot_positions[i].x != robot_position.y)
+                {
+                    receive(bc_x, bc_y, oil_spill_position_x, oil_spill_position_y);
+                }
             }
-      }
+        }
  
-      if(smallestDist > (radius + distBotToCircle))
-      {
-      	printf("no objects were close enough, false alarm!\n");
-      	return -1;
-      }   
-        
-      return closestItem;
 }
+      
+    void receive(mkhsin035::robot& robo, double& bc_x, double& bc_y, double& oil_spill_position_x, double& oil_spill_position_y)
+    {
+        mkhsin035::pos robot_position = robo.get_position();
+        double x = robot_position.x - bc_x;
+        double y = robot_position.y - bc_y;
+        double Dj = (x*x) + (y * y);
+        if(Dj > robo.Df)
+        {
+            robo.farthest_robot_x = bc_x;
+            robo.farthest_robot_y = bc_y;
+        }
+        else if(Dj < robo.Dn)
+        {
+            robo.nearest_robot_x = bc_x;
+            robo.nearest_robot_y = bc_y;
+        }
+        robo.oil_spill_position_x = oil_spill_position_x;
+        robo.oil_spill_position_y = oil_spill_position_y;
+        robo.bc_x = bc_x;
+        robo.bc_y = bc_y;
+    }
+
+
+    void mkhsin035::comms::add(mkhsin035::robot r)
+    {
+        robots.add(r);
+    }
