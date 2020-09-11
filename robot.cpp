@@ -16,7 +16,7 @@
     /*
      * Constructor
      */
-    mkhsin035::robot::robot(std::string host, int port, int status)
+    mkhsin035::robot::robot(std::string host, int port, int status, std::string cfg_file_name)
     {
         this->host = host;
         this->port = port;
@@ -79,6 +79,15 @@
         playerc_position2d_get_geom(this->p2d_proxy);
 	playerc_ranger_get_geom(this->sonar_proxy);
     }
+    
+    mkhsin035::pos mkhsin035::robot::get_position()
+    {
+        mkhsin035::pos position;
+        playerc_simulation_get_pose2d(sim_proxy,cfg_file_name, &position.x, &position.y, &position.yaw);
+        return position;
+    }
+
+    
     /* Shutdown */
     void mkhsin035::robot::shutdown()
     {
