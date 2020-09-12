@@ -35,7 +35,7 @@
     }
 void mkhsin035::comms::broadcast(robot& robo, playerc_simulation_t *sim_proxy)
 {
-    std::cout<<"broadcast:start"<<std::endl;
+    //std::cout<<"broadcast:start"<<std::endl;
     mkhsin035::pos robot_position;
     mkhsin035::pos other_robot_positions[4];
     double circleX, circleY;
@@ -58,7 +58,7 @@ void mkhsin035::comms::broadcast(robot& robo, playerc_simulation_t *sim_proxy)
     {
         robot r = robots[i];
         other_robot_positions[i] = r.get_position(sim_proxy);
-        std::cout<<"broadcast:pos for "<<i<<": "<<other_robot_positions[i].x<<" y: "<<other_robot_positions[i].y<<std::endl;
+        //std::cout<<"broadcast:pos for "<<i<<": "<<other_robot_positions[i].x<<" y: "<<other_robot_positions[i].y<<std::endl;
     }
     
     //find actual center relative to simulation.
@@ -80,7 +80,7 @@ void mkhsin035::comms::broadcast(robot& robo, playerc_simulation_t *sim_proxy)
             if(dist > 0 && dist < radius)
             {
                 comms::receive(robots[i], sim_proxy, robo.bc_x, robo.bc_y, robo.oil_spill_position_x, robo.oil_spill_position_y);
-                std::cout<<"broadcasted "<<i<<std::endl;
+                //std::cout<<"broadcasted "<<i<<std::endl;
             }
         }
  
