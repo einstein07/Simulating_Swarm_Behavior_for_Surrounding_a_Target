@@ -1,10 +1,15 @@
-# Minimal C/C++ makefile
-# Kevin Nickels
-# Just type "make exec" and if exec.cc or .c exists, it'll do the right thing
-
-CXXFLAGS = `pkg-config --cflags playerc++` -g
-CFLAGS = `pkg-config --cflags playerc` -g
+CC=g++
+CFLAGS=`pkg-config --cflags playerc++`
 LDLIBS = `pkg-config --libs playerc++`
-CC = g++
+SOURCES=main.cpp robot.cpp communication.cpp
+DEPS=robot.h communication.h
+OBJECTS=$(SOURCES:.cpp=.o)
+EXECUTABLE=swarm
 
-all: simple
+all:$(EXECUTABLE)
+	@echo Make has finished.
+
+$(EXECUTABLE):
+	$(CC) -o $@ $(CFLAGS) -g $(SOURCES) $(LDLIBS)
+clean:
+	rm -f a.out core $(EXECUTABLE) *.o
