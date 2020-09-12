@@ -85,6 +85,10 @@
         return position;
     }
 
+    void mkhsin035::robot::set_motors(double& forward_speed, double& turning_speed)
+    {
+        playerc_position2d_set_cmd_vel(this->p2d_proxy, forward_speed, 0.00, DTOR(turning_speed), 1);
+    }
     
     /* Shutdown */
     void mkhsin035::robot::shutdown()
