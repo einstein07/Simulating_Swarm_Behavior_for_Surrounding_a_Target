@@ -16,27 +16,32 @@
 #include <string> 
 #include <iostream>
 #include <vector>
+#include <math.h>
+#include <bits/stdc++.h>
 #include <libplayerc/playerc.h>
 namespace mkhsin035{
+    struct Position
+    {
+      double yaw;
+      double x;
+      double y;
+    }typedef pos;
+    
     class robot{
     private:
-        std_string cfg_file_name;
-        std::string host; //address of the host computer goes here
+        char cfg_file_name[7];
+        char* host; //address of the host computer goes here
         int port; //the port this robot uses to connect to Player
         int status; //1 if this robot is connected to player. 0 if this robot is offline
-        //Comms
-        double bc_x; double bc_y; //broadcast coordinates
-        double oil_spill_position_x; double oil_spill_position_y;
-        double nearest_robot_x; double nearest_robot_y;
-        double farthest_robot_x; double farthest_robot_y;
-        
+                
         //Player proxies
-        playerc_client_t *robot;
+        
         playerc_ranger_t *sonar_proxy;
         playerc_position2d_t *p2d_proxy;
         playerc_blobfinder_t *blob_proxy;
-        playerc_simulation_t *sim_proxy;
+        
     public:
+        playerc_client_t *rob;
         //Comms
         double bc_x; double bc_y; //broadcast coordinates
         double oil_spill_position_x; double oil_spill_position_y;
@@ -45,20 +50,15 @@ namespace mkhsin035{
         double Df; double Dn; //distance to farthest and nearest robots
         
         robot();
-        robot(std::string host, int port, int status, std::string cfg_file_name);
+        robot(char* host, int port, std::string name);
         int connect_to_server();
         int subscribe_to_devices();
         void enable_motors();
         void request_geometries();
-        pos get_position();
+        void read_from_proxies();
+        pos get_position(playerc_simulation_t *sim_proxy);
         void shutdown();
     };
-    struct Position
-    {
-      double yaw;
-      double x;
-      double y;
-    }typedef pos;
           
 };
 

@@ -16,17 +16,24 @@
     /*
      * Constructor
      */
-    mkhsin035::robot::robot(std::string host, int port, int status, std::string cfg_file_name)
+    mkhsin035::robot::robot(char* host, int port, std::string name)
     {
+        int n = name.length(); 
+  
+        
+  
+        // copying the contents of the 
+        // string to char array 
+        strcpy(cfg_file_name, name.c_str());
         this->host = host;
         this->port = port;
-        this->status = status;
+        this->status = 0;
     }
 
     int mkhsin035::robot::connect_to_server()
     {
-        this->robot = playerc_client_create(NULL, this->host, this->port);
-        if (playerc_client_connect(robot) != 0)
+        this->rob = playerc_client_create(NULL, this->host, this->port);
+        if (playerc_client_connect(rob) != 0)
         {
             std::cout<<"could not connect to player"<<std::endl;
             return -1;
@@ -42,31 +49,16 @@
         /*
          * create devices first
          */
-        this->sonar_proxy = playerc_ranger_create(this->robot, 0);
-        this->p2d_proxy = playerc_position2d_create(this->robot, 0);
-        this->blob_proxy = playerc_blobfinder_create(this->robot, 0);
-        /*
-         * subscribe to devices
-         */
+        this->sonar_proxy = playerc_ranger_create(this->rob, 0);
         if (playerc_ranger_subscribe(this->sonar_proxy, PLAYER_OPEN_MODE))
-        {
-            std<<"could not subscribe to sonar"<<std::endl;
             return -1;
-        }
-        else if (playerc_blobfinder_subscribe(this->blob_proxy, PLAYER_OPEN_MODE))
-        {
-            std<<"could not subscribe to blobfinder"<<std::endl;
+        this->p2d_proxy = playerc_position2d_create(this->rob, 0);
+        if (playerc_position2d_subscribe(this->p2d_proxy, PLAYER_OPEN_MODE))
             return -1;
-        }
-        else if (playerc_position2d_subscribe(this->p2d_proxy, PLAYER_OPEN_MODE))
-        {
-            std<<"could not subscribe to position2d proxy"<<std::endl;
+        this->blob_proxy = playerc_blobfinder_create(this->rob, 0);
+        if (playerc_blobfinder_subscribe(this->blob_proxy, PLAYER_OPEN_MODE))
             return -1;
-        }
-        else
-        {
-            return 0;
-        }
+        return 0;
     }
     /*Enable motors*/
     void mkhsin035::robot::enable_motors()
@@ -80,10 +72,16 @@
 	playerc_ranger_get_geom(this->sonar_proxy);
     }
     
-    mkhsin035::pos mkhsin035::robot::get_position()
+    /*read from proxies*/
+    void mkhsin035::robot::read_from_proxies()
+    {
+        playerc_client_read(this->rob);
+    }
+            
+    mkhsin035::pos mkhsin035::robot::get_position(playerc_simulation_t *sim_proxy)
     {
         mkhsin035::pos position;
-        playerc_simulation_get_pose2d(sim_proxy,cfg_file_name, &position.x, &position.y, &position.yaw);
+        playerc_simulation_get_pose2d(sim_proxy, cfg_file_name, &position.x, &position.y, &position.yaw);
         return position;
     }
 
@@ -94,13 +92,11 @@
 	playerc_position2d_unsubscribe(this->p2d_proxy);
 	playerc_ranger_unsubscribe(this->sonar_proxy);
 	playerc_blobfinder_unsubscribe(this->blob_proxy);
-	playerc_simulation_unsubscribe(this->sim_proxy);
 
 	playerc_position2d_destroy(this->p2d_proxy); 
 	playerc_ranger_destroy(this->sonar_proxy);
 	playerc_blobfinder_destroy(this->blob_proxy);
-	playerc_simulation_destroy(this->sim_proxy);
 
-	playerc_client_disconnect(this->robot);
-        playerc_client_destroy(this->robot);
+	playerc_client_disconnect(this->rob);
+        playerc_client_destroy(this->rob);
     }
