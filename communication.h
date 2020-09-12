@@ -17,11 +17,14 @@
 namespace mkhsin035{
   class comms{
   private:
-      std::vector<mkhsin035::robot> robots;
+        //radius of the communication circle
+        double radius = 2;
+        std::vector<mkhsin035::robot> robots;
   public:
-      void add(mkhsin035::robot r);
-      void broadcast(mkhsin035::robot& robo, double bc_x, double bc_y, double oil_spill_position_x, double oil_spill_position_y);
-      void receive(mkhsin035::robot, double& bc_x, double& bc_y, double& oil_spill_position_x, double& oil_spill_position_y);
+        comms();
+        void add(mkhsin035::robot r);
+        void receive(mkhsin035::robot& robo, playerc_simulation_t *sim_proxy, double& bc_x, double& bc_y, double& oil_spill_position_x, double& oil_spill_position_y);
+        void broadcast(mkhsin035::robot& robo, playerc_simulation_t *sim_proxy);
   };  
   struct Item
 {
