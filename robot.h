@@ -34,13 +34,13 @@ namespace mkhsin035{
         int port; //the port this robot uses to connect to Player
         int status; //1 if this robot is connected to player. 0 if this robot is offline
                 
+               
+    public:
+         
         //Player proxies
-        
         playerc_ranger_t *sonar_proxy;
         playerc_position2d_t *p2d_proxy;
         playerc_blobfinder_t *blob_proxy;
-        
-    public:
         playerc_client_t *rob;
         //Comms
         double bc_x; double bc_y; //broadcast coordinates
@@ -54,6 +54,7 @@ namespace mkhsin035{
         int connect_to_server();
         int subscribe_to_devices();
         void enable_motors();
+        void set_motors(double& forward_speed, double& turning_speed);
         void request_geometries();
         void read_from_proxies();
         pos get_position(playerc_simulation_t *sim_proxy);
