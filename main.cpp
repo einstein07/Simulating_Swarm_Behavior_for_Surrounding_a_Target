@@ -14,6 +14,7 @@
 #include <cstdlib>
 #include "robot.h"
 #include "communication.h"
+#include "movement.h"
 #include <unistd.h>
 #include <vector>
 using namespace std;
@@ -55,15 +56,38 @@ int main(int argc, char** argv) {
     robot3.request_geometries();
     robot4.request_geometries();
     
-    robot2.read_from_proxies();
-    pos p = robot2.get_position(sim_proxy);
-    cout<<"x: "<<p.x<<"\ny: "<<p.y<<"\nyaw: "<<p.yaw<<endl;
+    //useful variables 
+    double forward_speed, turning_speed;
+    srand(time(NULL));
+    
     //Prepare comms
     comms c;
+    movement moves(2, 0.5);
     c.add(robot1); c.add(robot2); c.add(robot3); c.add(robot4);
-    for (int i = 0; i < 1; i++){
+    while (true){
+        //read from proxies
         robot1.read_from_proxies();robot2.read_from_proxies();robot3.read_from_proxies();robot4.read_from_proxies();
+        //robot 1
         c.broadcast(robot1, sim_proxy);
+        moves.avoid_collisions(robot1, forward_speed, turning_speed);
+        moves.wander(robot1, forward_speed, turning_speed);
+        robot1.set_motors(forward_speed, turning_speed);
+        //robot 2
+        c.broadcast(robot2, sim_proxy);
+        moves.avoid_collisions(robot2, forward_speed, turning_speed);
+        moves.wander(robot2, forward_speed, turning_speed);
+        robot2.set_motors(forward_speed, turning_speed);
+        //robot 3
+        c.broadcast(robot3, sim_proxy);
+        moves.avoid_collisions(robot3, forward_speed, turning_speed);
+        moves.wander(robot3, forward_speed, turning_speed);
+        robot3.set_motors(forward_speed, turning_speed);
+        //robot 4
+        c.broadcast(robot4, sim_proxy);
+        moves.avoid_collisions(robot4, forward_speed, turning_speed);
+        moves.wander(robot4, forward_speed, turning_speed);
+        robot4.set_motors(forward_speed, turning_speed);
+        
         usleep(1000000);
     }
     
