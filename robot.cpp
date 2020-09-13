@@ -11,12 +11,18 @@
     /*
     * Default constructor 
     */
-    mkhsin035::robot::robot():host(""), port(0), status(0){}
+    mkhsin035::robot::robot():host(""), port(0), status(0),
+            oil_spill_position_x(-1000), oil_spill_position_y(-1000),
+            nearest_robot_x(-1000), nearest_robot_y(-1000),
+    farthest_robot_x(-1000), farthest_robot_y(-1000){}
     
     /*
      * Constructor
      */
-    mkhsin035::robot::robot(char* host, int port, std::string name)
+    mkhsin035::robot::robot(char* host, int port, std::string name):
+            oil_spill_position_x(-1000), oil_spill_position_y(-1000),
+            nearest_robot_x(-1000), nearest_robot_y(-1000),
+    farthest_robot_x(-1000), farthest_robot_y(-1000)
     {
         int n = name.length(); 
   
