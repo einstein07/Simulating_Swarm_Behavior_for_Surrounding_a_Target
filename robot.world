@@ -22,28 +22,28 @@ window
 robot
 (
     name "robot1"
-    pose [-5 -6 0 45]
+    pose [-5 -6 0 0]
     color "green"
 )
 
 robot
 (
     name "robot2"
-    pose [-4 -6 0 45]
+    pose [-4 -6 0 0]
     color "green"
 )
 
 robot
 (
     name "robot3"
-    pose [-5 6 0 45]
+    pose [-5 6 0 0]
     color "green"
 )
 
 robot
 (
     name "robot4"
-    pose [-2 2 0 45]
+    pose [-2 2 0 0]
     color "green"
 )
 
