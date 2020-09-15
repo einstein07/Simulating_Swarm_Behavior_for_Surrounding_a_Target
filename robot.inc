@@ -57,6 +57,7 @@ define robot position
 					 point[1] [0.5 0.125]
 					 point[0] [0.375 0]
 					 z [0 0.5]
+
 		  )
 		#positional things
 		  drive "diff"
