@@ -80,13 +80,13 @@ void mkhsin035::comms::broadcast(robot& robo, playerc_simulation_t *sim_proxy)
             if(dist > 0 && dist < radius)
             {
                 comms::receive(robots[i], sim_proxy, robo.bc_x, robo.bc_y, robo.oil_spill_position_x, robo.oil_spill_position_y);
-                //std::cout<<"broadcasted "<<i<<std::endl;
+                std::cout<<"broadcasted "<<i<<std::endl;
             }
         }
  
 }
 
-    void mkhsin035::comms::add(mkhsin035::robot r)
+    void mkhsin035::comms::add(mkhsin035::robot& r)
     {
         robots.push_back(r);
     }

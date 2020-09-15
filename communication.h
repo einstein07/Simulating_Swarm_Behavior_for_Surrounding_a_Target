@@ -18,11 +18,11 @@ namespace mkhsin035{
   class comms{
   private:
         //radius of the communication circle
-        double radius = 2;
+        double radius = 10;
         std::vector<mkhsin035::robot> robots;
   public:
         comms();
-        void add(mkhsin035::robot r);
+        void add(mkhsin035::robot& r);
         void receive(mkhsin035::robot& robo, playerc_simulation_t *sim_proxy, double& bc_x, double& bc_y, double& oil_spill_position_x, double& oil_spill_position_y);
         void broadcast(mkhsin035::robot& robo, playerc_simulation_t *sim_proxy);
   };  
