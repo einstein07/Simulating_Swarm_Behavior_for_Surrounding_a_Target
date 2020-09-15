@@ -17,30 +17,49 @@ mkhsin035::movement::movement(double circle_diameter, double Dmin):circle_diamet
 
 void mkhsin035::movement::move(robot& robo, playerc_simulation_t *sim_proxy, double& forward_speed, double& turning_speed)
 {
+    std::cout<<"move"<<std::endl;
     double tspeed = 5;
     int margin = 5;
     mkhsin035::pos robo_pos = robo.get_position(sim_proxy);
     if(robo.blob_proxy->blobs_count > 0)
     {
-        robo.oil_spill_position_x = robo.blob_proxy->blobs[0].x;
-        robo.oil_spill_position_y = robo.blob_proxy->blobs[0].y;
+        for (int i = 0; i < robo.blob_proxy->blobs_count; i++)
+        {
+            if(robo.blob_proxy->blobs[i].color == 0)
+            {
+                char name[5];
+                std::string oil = "oil1";
+                strcpy(name, oil.c_str());
+                pos oil_pos;
+                playerc_simulation_get_pose2d(sim_proxy, name, &oil_pos.x, &oil_pos.y, &oil_pos.yaw);
+                robo.oil_spill_position_x = oil_pos.x;
+                robo.oil_spill_position_y = oil_pos.y; 
+            }
+        }
+        
     }
     if (robo.oil_spill_position_x != -1000)
     {
+        std::cout<<"target coordinates known: ("<<robo.oil_spill_position_x<<","<<robo.oil_spill_position_y<<")"<<std::endl;
         
         double adjacent = robo.oil_spill_position_x - robo_pos.x;
         double opp = robo.oil_spill_position_y - robo_pos.y;
-        double desired_yaw = tan(opp/adjacent);
-        
-        double Dt = dist(robo_pos.x, robo_pos.y, robo.oil_spill_position_x, robo.oil_spill_position_y);
-        if (Dt <= this->circle_diameter)
+        double desired_yaw = atan(opp/adjacent);
+        if((opp < 0 && adjacent < 0) || (adjacent < 0))
         {
-            if(robo_pos.yaw > DTOR(desired_yaw + margin))
+            desired_yaw = desired_yaw + DTOR(180);
+        }
+        std::cout<<"desired yaw to reach target: "<<desired_yaw<<std::endl;
+        //std::cout<<"current robo yaw: "<<robo_pos.yaw<<std::endl;
+        double Dt = dist(robo_pos.x, robo_pos.y, robo.oil_spill_position_x, robo.oil_spill_position_y);
+        if (Dt < this->circle_diameter)
+        {
+            if(robo_pos.yaw > (desired_yaw + DTOR(margin)))
             {
                 forward_speed = 0;
                 turning_speed = (-1) * tspeed;
             }
-            else if (robo_pos.yaw < DTOR(desired_yaw - margin))
+            else if (robo_pos.yaw < (desired_yaw - DTOR(margin)))
             {
                 forward_speed = 0;
                 turning_speed = tspeed;
@@ -52,14 +71,14 @@ void mkhsin035::movement::move(robot& robo, playerc_simulation_t *sim_proxy, dou
             }
             
         }
-        else 
+        else if(Dt > this->circle_diameter) 
         {
-          if(robo_pos.yaw > DTOR(desired_yaw + margin))
+          if(robo_pos.yaw > (desired_yaw + DTOR(margin)))
             {
                 forward_speed = 0;
                 turning_speed = (-1) * tspeed;
             }
-            else if (robo_pos.yaw < DTOR(desired_yaw - margin))
+            else if (robo_pos.yaw < (desired_yaw - DTOR(margin)))
             {
                 forward_speed = 0;
                 turning_speed = tspeed;
@@ -70,83 +89,115 @@ void mkhsin035::movement::move(robot& robo, playerc_simulation_t *sim_proxy, dou
                 turning_speed = 0;
             }  
         }
-    }
-    else
-    {
-        double x_temp = 0.5 * (robo.nearest_robot_x + robo.farthest_robot_x);
-        double y_temp = 0.5 * (robo.nearest_robot_y + robo.farthest_robot_y);
-        double D_temp = dist(robo_pos.x, robo_pos.y, x_temp, y_temp);
-        
-        double adjacent = x_temp - robo_pos.x;
-        double opp = y_temp - robo_pos.y;
-        double desired_yaw = tan(opp/adjacent);
-        
-        if(D_temp <= this->circle_diameter)
+        else
         {
-            if(robo_pos.yaw > DTOR(desired_yaw + margin))
+         if(robo_pos.yaw > (desired_yaw + DTOR(margin)))
             {
                 forward_speed = 0;
                 turning_speed = (-1) * tspeed;
             }
-            else if (robo_pos.yaw < DTOR(desired_yaw - margin))
+            else if (robo_pos.yaw < (desired_yaw - DTOR(margin)))
             {
                 forward_speed = 0;
                 turning_speed = tspeed;
             }
             else
             {
-                forward_speed = -0.1;
-                turning_speed = 0;
-            }
-        }
-        else 
-        {
-          if(robo_pos.yaw > DTOR(desired_yaw + margin))
-            {
                 forward_speed = 0;
-                turning_speed = (-1) * tspeed;
-            }
-            else if (robo_pos.yaw < DTOR(desired_yaw - margin))
-            {
-                forward_speed = 0;
-                turning_speed = tspeed;
-            }
-            else
-            {
-                forward_speed = 0.1;
                 turning_speed = 0;
-            }  
+            }   
         }
     }
+//    else
+//    {
+//        std::cout<<"target unknown"<<std::endl;
+//        double x_temp = 0.5 * (robo.nearest_robot_x + robo.farthest_robot_x);
+//        double y_temp = 0.5 * (robo.nearest_robot_y + robo.farthest_robot_y);
+//        double D_temp = dist(robo_pos.x, robo_pos.y, x_temp, y_temp);
+//        
+//        double adjacent = x_temp - robo_pos.x;
+//        double opp = y_temp - robo_pos.y;
+//        double desired_yaw = tan(opp/adjacent);
+//        std::cout<<"desired yaw to reach target: "<<desired_yaw<<std::endl;
+//        
+//        if(D_temp <= this->circle_diameter)
+//        {
+//            if(robo_pos.yaw > DTOR(desired_yaw + margin))
+//            {
+//                forward_speed = 0;
+//                turning_speed = (-1) * tspeed;
+//            }
+//            else if (robo_pos.yaw < DTOR(desired_yaw - margin))
+//            {
+//                forward_speed = 0;
+//                turning_speed = tspeed;
+//            }
+//            else
+//            {
+//                forward_speed = 0.1;
+//                turning_speed = 0;
+//            }
+//        }
+//        else 
+//        {
+//          if(robo_pos.yaw > (-1) * DTOR(desired_yaw + margin))
+//            {
+//                forward_speed = 0;
+//                turning_speed = (-1) * tspeed;
+//            }
+//            else if (robo_pos.yaw < (-1) * DTOR(desired_yaw - margin))
+//            {
+//                forward_speed = 0;
+//                turning_speed = tspeed;
+//            }
+//            else
+//            {
+//                forward_speed = 0.1;
+//                turning_speed = 0;
+//            }  
+//        }
+//    }
     
 }
 
       
 void mkhsin035::movement::avoid_collisions(robot& robo, double& forward_speed, double& turning_speed)
 {
+    std::cout<<"avoiding collisions"<<std::endl;
     double *s_p = robo.sonar_proxy->ranges;
-    int tspeed = 45;
+    int tspeed = 20;
+    
     //left corner sonar
-    if (s_p[2] <= this->min_dist_nearest)
+    if (s_p[2] < this->min_dist_nearest)
     {
         forward_speed = 0;
         turning_speed = (-1) * tspeed;
+        std::cout<<"turning right"<<std::endl;
+        return;
     }
     //right corner sonar
-    else if(s_p[3] <= this->min_dist_nearest)
+    else if(s_p[3] < this->min_dist_nearest)
     {
         forward_speed = 0;
         turning_speed = tspeed;
+        std::cout<<"turning left"<<std::endl;
+        return;
     }
     //front sonars
-    else if ((s_p[0] <= min_dist_nearest) && (s_p[1] <= min_dist_nearest))
+    else if ((s_p[0] < min_dist_nearest) && (s_p[1] < min_dist_nearest))
     {
         //we do not want robot to move to far away
-        forward_speed = -0.1;
+        forward_speed = -0.4;
         turning_speed = tspeed;
+        std::cout<<"turning back"<<std::endl;
+        return;
     }
     else
     {
+        for (int i = 0; i < robo.sonar_proxy->ranges_count; i++)
+        {
+            std::cout<<robo.sonar_proxy->ranges[i]<<std::endl;
+        }
         return;
     }
 }
@@ -154,10 +205,12 @@ void mkhsin035::movement::avoid_collisions(robot& robo, double& forward_speed, d
 
 void mkhsin035::movement::wander(robot& robo, double& forward_speed, double& turning_speed)
 {
+    srand(time(NULL));
+    std::cout<<"wandering"<<std::endl;
     int max_speed = 1;
     int max_turning_speed = 90;
-    //val between 0-10
-    double f_speed = rand()%11;
+    //val between 1-10
+    double f_speed = rand()%10+1;
     f_speed = (f_speed / 10) * max_speed;
     double t_speed = rand()%(2 * max_turning_speed);
     t_speed = t_speed - max_turning_speed;
