@@ -23,9 +23,10 @@ namespace mkhsin035{
       double min_dist_nearest;
   public:
       movement(double circle_diameter, double Dmin);
-      void move(robot& robo);
+      void move(robot& robo, playerc_simulation_t *sim_proxy, double& forward_speed, double& turning_speed);
       void wander(robot& robo, double& forward_speed, double& turning_speed);
-      void avoid_collisions(robot& robo, double& forward_speed, double& turning_speed);
+      void avoid_collisions(robot& robo, playerc_simulation_t *sim_proxy, double& forward_speed, double& turning_speed);
+      double dist(double x, double y, double xf, double yf);
   };  
 };
 
