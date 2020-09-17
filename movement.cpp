@@ -203,10 +203,10 @@ void mkhsin035::movement::avoid_collisions(robot& robo, playerc_simulation_t *si
         
     double tspeed = 60;
     double fspeed = 0.5;
-    if (Dn < this->min_dist_nearest)
+    if (Dn > this->min_dist_nearest)
     {
         std::cout<<"nearest neighbor coordinates: ("<<robo.nearest_robot_x<<","<<robo.nearest_robot_y<<")"<<std::endl;
-        std::cout<<"bearing to neighbor: "<<neighbor_bearing<<std::endl;
+        std::cout<<"distance to nearest: "<<Dn<<std::endl;
         if(((neighbor_bearing - robo_pos.yaw) > DTOR(45 + margin)) || ((robo_pos.yaw - neighbor_bearing) > DTOR(45 + margin)))
         {
             forward_speed = fspeed; 
