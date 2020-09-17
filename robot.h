@@ -31,9 +31,7 @@ namespace mkhsin035{
     private:
         char cfg_file_name[7];
         char* host; //address of the host computer goes here
-        int port; //the port this robot uses to connect to Player
-        int status; //1 if this robot is connected to player. 0 if this robot is offline
-                
+        int port; //the port this robot uses to connect to Player                
                
     public:
          
@@ -43,6 +41,7 @@ namespace mkhsin035{
         playerc_blobfinder_t *blob_proxy;
         playerc_client_t *rob;
         //Comms
+        int status; //1 if this robot is supposed to broadcast received coordinates. 0 if this robot is supposed to receive its own coordinates
         double bc_x; double bc_y; //broadcast coordinates
         double oil_spill_position_x; double oil_spill_position_y;
         double nearest_robot_x; double nearest_robot_y;
