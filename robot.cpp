@@ -14,15 +14,16 @@
     mkhsin035::robot::robot():host(""), port(0), status(0),
             oil_spill_position_x(-1000), oil_spill_position_y(-1000),
             nearest_robot_x(-1000), nearest_robot_y(-1000),
-    farthest_robot_x(-1000), farthest_robot_y(-1000){}
+    farthest_robot_x(0), farthest_robot_y(0){}
     
     /*
      * Constructor
      */
     mkhsin035::robot::robot(char* host, int port, std::string name):
             oil_spill_position_x(-1000), oil_spill_position_y(-1000),
-            nearest_robot_x(-1000), nearest_robot_y(-1000),
-    farthest_robot_x(-1000), farthest_robot_y(-1000)
+            nearest_robot_x(INFINITY), nearest_robot_y(INFINITY),
+    farthest_robot_x(INFINITY), farthest_robot_y(INFINITY), Dn(INFINITY), Df(INFINITY),
+            bc_x(INFINITY), bc_y(INFINITY)
     {
         int n = name.length(); 
   
