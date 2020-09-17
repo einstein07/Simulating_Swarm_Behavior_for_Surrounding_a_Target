@@ -26,7 +26,7 @@ namespace mkhsin035{
       void move(robot& robo, playerc_simulation_t *sim_proxy, double& forward_speed, double& turning_speed);
       void wander(robot& robo, double& forward_speed, double& turning_speed);
       void avoid_collisions(robot& robo, playerc_simulation_t *sim_proxy, double& forward_speed, double& turning_speed);
-      double dist(double x, double y, double xf, double yf);
+      static double dist(double x, double y, double xf, double yf);
   };  
 };
 
