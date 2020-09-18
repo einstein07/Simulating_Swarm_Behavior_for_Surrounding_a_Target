@@ -200,30 +200,32 @@ void mkhsin035::movement::avoid_collisions(robot& robo, playerc_simulation_t *si
         neighbor_bearing = neighbor_bearing + DTOR(180);
     }
     double Dn = dist(robo_pos.x, robo_pos.y, robo.nearest_robot_x, robo.nearest_robot_y);
-        
+    //to move away from nearest neighbor we need to turn around and face opp direction to nearest neighbor
+    double desired_yaw = (-1) * neighbor_bearing;
     double tspeed = 60;
     double fspeed = 0.5;
-    if (Dn > this->min_dist_nearest)
+    if (Dn < this->min_dist_nearest)
     {
         std::cout<<"nearest neighbor coordinates: ("<<robo.nearest_robot_x<<","<<robo.nearest_robot_y<<")"<<std::endl;
         std::cout<<"distance to nearest: "<<Dn<<std::endl;
-        if(((neighbor_bearing - robo_pos.yaw) > DTOR(45 + margin)) || ((robo_pos.yaw - neighbor_bearing) > DTOR(45 + margin)))
-        {
-            forward_speed = fspeed; 
-            turning_speed = 0;
-            return;
-        }
-        else if (((neighbor_bearing - robo_pos.yaw) < DTOR(45 - margin)) || ((robo_pos.yaw - neighbor_bearing) < DTOR(45 - margin)))
-        {
-            forward_speed = -fspeed;
-            turning_speed = tspeed;
-            return;
-        }
-        else{
-            forward_speed = fspeed;
-            turning_speed = -tspeed;
-            return;
-        }
+        
+        
+            if(robo_pos.yaw > (desired_yaw + DTOR(yaw_margin)))
+            {
+                forward_speed = fspeed;
+                turning_speed = (-1) * tspeed;
+            }
+            else if (robo_pos.yaw < (desired_yaw - DTOR(yaw_margin)))
+            {
+                forward_speed = fspeed;
+                turning_speed = tspeed;
+            }
+            else
+            {
+                forward_speed = fspeed;
+                turning_speed = 0;
+            }
+        
     }
     return;
 }
