@@ -16,44 +16,48 @@
     void mkhsin035::comms::receive(mkhsin035::robot& robo, playerc_simulation_t *sim_proxy, double& bc_x, double& bc_y, double& oil_spill_position_x, double& oil_spill_position_y)
     {
         mkhsin035::pos robot_position = robo.get_position(sim_proxy);
-//        double x = robot_position.x - bc_x;
-//        double y = robot_position.y - bc_y;
+
         double Dj = movement::dist(robot_position.x, robot_position.y, bc_x, bc_y);
-        //std::cout<<"Dj: "<<Dj<<std::endl;
-        //std::cout<<"Df: "<<robo.Df<<std::endl;
-        //std::cout<<"Dn: "<<robo.Dn<<std::endl;
-        if(robo.Df == INFINITY|| robo.Dn == INFINITY)
+        if ((robot_position.x < bc_x + 0.15 && robot_position.x > bc_x - 0.15) && (robot_position.y < bc_y + 0.15 && robot_position.y > bc_y - 0.15))
         {
-            robo.farthest_robot_x = bc_x;
-            robo.farthest_robot_y = bc_y;
-            robo.nearest_robot_x = bc_x;
-            robo.nearest_robot_y = bc_y;
+            std::cout<<"receiving self"<<std::endl;
+            return;
         }
         else
         {
-            if(Dj > robo.Df)
+            if(robo.Df == INFINITY|| robo.Dn == INFINITY)
             {
-                //std::cout<<"changed farthest"<<std::endl;
                 robo.farthest_robot_x = bc_x;
                 robo.farthest_robot_y = bc_y;
-            }
-            else if(Dj < robo.Dn)
-            {
-                //std::cout<<"changed nearest"<<std::endl;
                 robo.nearest_robot_x = bc_x;
                 robo.nearest_robot_y = bc_y;
             }
-            robo.oil_spill_position_x = oil_spill_position_x;
-            robo.oil_spill_position_y = oil_spill_position_y;
-            robo.bc_x = bc_x;
-            robo.bc_y = bc_y;
-            robo.status = 1;
+            else
+            {
+                if(Dj > robo.Df)
+                {
+                    //std::cout<<"changed farthest"<<std::endl;
+                    robo.farthest_robot_x = bc_x;
+                    robo.farthest_robot_y = bc_y;
+                }
+                else if(Dj < robo.Dn)
+                {
+                    //std::cout<<"changed nearest"<<std::endl;
+                    robo.nearest_robot_x = bc_x;
+                    robo.nearest_robot_y = bc_y;
+                }
+                robo.oil_spill_position_x = oil_spill_position_x;
+                robo.oil_spill_position_y = oil_spill_position_y;
+                robo.bc_x = bc_x;
+                robo.bc_y = bc_y;
+                robo.status = 1;
+            }
         }
-        
+                
     }
 void mkhsin035::comms::broadcast(robot& robo, playerc_simulation_t *sim_proxy, std::vector<mkhsin035::robot> &robots)
 {
-    //std::cout<<"broadcast:start"<<std::endl;
+    std::cout<<"broadcast:start"<<std::endl;
     mkhsin035::pos robot_position;
     mkhsin035::pos other_robot_positions[4];
     double circleX, circleY;
@@ -90,8 +94,10 @@ void mkhsin035::comms::broadcast(robot& robo, playerc_simulation_t *sim_proxy, s
             double dist; 
             dist = movement::dist(circleX, circleY, other_robot_positions[i].x, other_robot_positions[i].y);
                         
-            if(dist > 0 && dist < radius)
+            // 
+            if(dist > 0 && dist < radius && !robo.is_self(robots[i]))
             {
+                std::cout<<robo.cfg_file_name<<" broadcasting to: "<<i<<" name: "<<robots[i].cfg_file_name<<std::endl;
                 comms::receive(robots[i], sim_proxy, robo.bc_x, robo.bc_y, robo.oil_spill_position_x, robo.oil_spill_position_y);
                 robo.status = 0;
             }
