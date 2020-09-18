@@ -36,6 +36,16 @@
         this->port = port;
         this->status = 0;
     }
+    
+    bool mkhsin035::robot::is_self(robot& other)
+    {
+        for (int i = 0; i < 7; i++)
+        {
+            if(this->cfg_file_name[i] != other.cfg_file_name[i])
+                return false;
+        }
+        return true;
+    }
 
     int mkhsin035::robot::connect_to_server()
     {
