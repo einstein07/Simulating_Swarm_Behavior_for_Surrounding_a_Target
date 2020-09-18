@@ -50,6 +50,7 @@ namespace mkhsin035{
         
         robot();
         robot(char* host, int port, std::string name);
+        bool is_self(robot& other);
         int connect_to_server();
         int subscribe_to_devices();
         void enable_motors();
