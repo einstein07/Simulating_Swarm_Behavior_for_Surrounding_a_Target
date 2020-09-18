@@ -17,7 +17,6 @@
 #include "movement.h"
 #include <unistd.h>
 #include <vector>
-#include<chrono>
 using namespace std;
 using namespace mkhsin035;
 /*
@@ -46,7 +45,7 @@ int main(int argc, char** argv) {
     playerc_simulation_t *sim_proxy;
     sim_proxy = playerc_simulation_create(robot1.rob, 0);
 	  if (playerc_simulation_subscribe(sim_proxy, PLAYER_OPEN_MODE))
-                cout<<"could not be done"<<endl;
+                cout<<"could not subscribe to simulator proxy"<<endl;
     //enable motors
     robot1.enable_motors();
     robot2.enable_motors();
@@ -64,8 +63,10 @@ int main(int argc, char** argv) {
     robots.push_back(robot4);
     
     //useful variables 
-    double forward_speed, turning_speed, forward_speed2, turning_speed2,
-            forward_speed3, turning_speed3, forward_speed4, turning_speed4;
+    double forward_speed1, turning_speed1,      //robot 1 
+            forward_speed2, turning_speed2,     //robot 2
+            forward_speed3, turning_speed3,     //robot 3
+            forward_speed4, turning_speed4;     //robot 4
     srand(time(NULL));
     
     //Prepare comms
@@ -74,36 +75,25 @@ int main(int argc, char** argv) {
     while (true){
         //read from proxies
         robots[0].read_from_proxies();robots[1].read_from_proxies();robots[2].read_from_proxies();robots[3].read_from_proxies();
-//        moves.wander(robots[0], forward_speed, turning_speed);
-//        c.broadcast(robots[0], sim_proxy, robots);
-//        usleep(1000000);
-//        c.broadcast(robots[1], sim_proxy, robots);
-//        std::cout<<"robot 2 nearest robot coordinates: "<<robots[1].nearest_robot_x<<" "<<robots[1].nearest_robot_y<<std::endl;
-//        std::cout<<"robot 2 farthest robot coordinates: "<<robots[1].farthest_robot_x<<" "<<robots[1].farthest_robot_y<<std::endl;
-//        std::cout<<"robot 2 status"<<robots[1].status<<std::endl;
-//        usleep(1000000);
-//        c.broadcast(robots[3], sim_proxy, robots);
-//        usleep(1000000);
-//        std::cout<<"robot 2 status"<<robots[1].status<<std::endl;
-        
+     
         //robot 1
-        c.broadcast(robots[0], sim_proxy, robots);
         cout<<"robot 1"<<endl;
+        c.broadcast(robots[0], sim_proxy, robots);
         if (robots[0].blob_proxy->blobs_count == 0 && ((robots[0].farthest_robot_x == INFINITY || robots[0].nearest_robot_x == INFINITY) && robots[0].oil_spill_position_x == INFINITY))
         {
-            moves.wander(robots[0], forward_speed, turning_speed);
+            moves.wander(robots[0], forward_speed1, turning_speed1);
         }
         else
         {
-            moves.move(robots[0], sim_proxy, forward_speed, turning_speed);
+            moves.move(robots[0], sim_proxy, forward_speed1, turning_speed1);
             c.broadcast(robots[0], sim_proxy, robots);
         }
-        moves.avoid_collisions(robots[0], sim_proxy, forward_speed, turning_speed);
-        robots[0].set_motors(forward_speed, turning_speed);      
+        moves.avoid_collisions(robots[0], sim_proxy, forward_speed1, turning_speed1);
+        robots[0].set_motors(forward_speed1, turning_speed1);      
         
         //robot 2
-        c.broadcast(robots[1], sim_proxy, robots);
         cout<<"robot 2"<<endl;
+        c.broadcast(robots[1], sim_proxy, robots);
         if (robots[1].blob_proxy->blobs_count == 0 && ((robots[1].farthest_robot_x == INFINITY || robots[1].nearest_robot_x == INFINITY) && robots[1].oil_spill_position_x == INFINITY))
         {
             moves.wander(robots[1], forward_speed2, turning_speed2);
@@ -116,9 +106,9 @@ int main(int argc, char** argv) {
         moves.avoid_collisions(robots[1], sim_proxy, forward_speed2, turning_speed2);
         robots[1].set_motors(forward_speed2, turning_speed2);        
         
-        //robot 3
-        c.broadcast(robots[2], sim_proxy, robots);
+//        //robot 3
         cout<<"robot 3"<<endl;
+        c.broadcast(robots[2], sim_proxy, robots);
         if (robots[2].blob_proxy->blobs_count == 0 && ((robots[2].farthest_robot_x == INFINITY || robots[2].nearest_robot_x == INFINITY) && robots[2].oil_spill_position_x == INFINITY))
         {
             moves.wander(robots[2], forward_speed3, turning_speed3);
@@ -131,9 +121,9 @@ int main(int argc, char** argv) {
         moves.avoid_collisions(robots[2], sim_proxy, forward_speed3, turning_speed3);
         robots[2].set_motors(forward_speed3, turning_speed3);
         
-        //robot 4
-        c.broadcast(robots[3], sim_proxy, robots);
+//        //robot 4
         cout<<"robot 4"<<endl;
+        c.broadcast(robots[3], sim_proxy, robots);
         if (robots[3].blob_proxy->blobs_count == 0 && ((robots[3].farthest_robot_x == INFINITY || robots[3].nearest_robot_x == INFINITY) && robots[3].oil_spill_position_x == INFINITY))
         {
             moves.wander(robots[3], forward_speed4, turning_speed4);
