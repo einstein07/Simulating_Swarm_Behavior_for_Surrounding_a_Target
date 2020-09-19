@@ -202,8 +202,9 @@ void mkhsin035::movement::avoid_collisions(robot& robo, playerc_simulation_t *si
     double Dn = dist(robo_pos.x, robo_pos.y, robo.nearest_robot_x, robo.nearest_robot_y);
     //to move away from nearest neighbor we need to turn around and face opp direction to nearest neighbor
     double desired_yaw = (-1) * neighbor_bearing;
+    double yaw_margin = 10;
     double tspeed = 60;
-    double fspeed = 0.5;
+    double fspeed = 0.01;
     if (Dn < this->min_dist_nearest)
     {
         std::cout<<"nearest neighbor coordinates: ("<<robo.nearest_robot_x<<","<<robo.nearest_robot_y<<")"<<std::endl;
