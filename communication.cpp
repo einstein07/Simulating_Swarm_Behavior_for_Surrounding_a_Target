@@ -59,7 +59,7 @@ void mkhsin035::comms::broadcast(robot& robo, playerc_simulation_t *sim_proxy, s
 {
     std::cout<<"broadcast:start"<<std::endl;
     mkhsin035::pos robot_position;
-    mkhsin035::pos other_robot_positions[4];
+    mkhsin035::pos other_robot_positions[robots.size()];
     double circleX, circleY;
       
     //find the robot...
@@ -80,7 +80,7 @@ void mkhsin035::comms::broadcast(robot& robo, playerc_simulation_t *sim_proxy, s
     }
     
     //get the poses of other robots in sim
-    for(int i=0; i < 4; i++)
+    for(int i=0; i < robots.size(); i++)
     {
         other_robot_positions[i] = robots[i].get_position(sim_proxy);
     }
@@ -89,7 +89,7 @@ void mkhsin035::comms::broadcast(robot& robo, playerc_simulation_t *sim_proxy, s
     circleX = robot_position.x;
     circleY = robot_position.y;
            
-    for(int i=0; i<4; i++)
+    for(int i=0; i<robots.size(); i++)
         {
             double dist; 
             dist = movement::dist(circleX, circleY, other_robot_positions[i].x, other_robot_positions[i].y);
@@ -97,7 +97,7 @@ void mkhsin035::comms::broadcast(robot& robo, playerc_simulation_t *sim_proxy, s
             // 
             if(dist > 0 && dist < radius && !robo.is_self(robots[i]))
             {
-                std::cout<<robo.cfg_file_name<<" broadcasting to: "<<i<<" name: "<<robots[i].cfg_file_name<<std::endl;
+                //std::cout<<robo.cfg_file_name<<" broadcasting to: "<<i<<" name: "<<robots[i].cfg_file_name<<std::endl;
                 comms::receive(robots[i], sim_proxy, robo.bc_x, robo.bc_y, robo.oil_spill_position_x, robo.oil_spill_position_y);
                 robo.status = 0;
             }
