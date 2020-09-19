@@ -1,0 +1,152 @@
+# robot_16.world
+# world for the robot
+# Author: Sindiso Mkhatshwa
+# Date: 10 - 09 - 2020
+#--------------------------------------------------------------------------
+#includes
+#--------------------------------------------------------------------------
+include "map.inc"
+include "robot.inc"
+#--------------------------------------------------------------------------
+#code
+#--------------------------------------------------------------------------
+# configure the GUI window
+window
+(
+    #show_data 1
+    size [700 700]
+    scale 35
+)
+
+# load in our robots
+robot
+(
+    name "robot1"
+    pose [-5 -4 0 0]
+    color "green"
+
+)
+
+robot
+(
+    name "robot2"
+    pose [-4 -3 0 0]
+    color "green"
+    ranger_return 1
+)
+
+robot
+(
+    name "robot3"
+    pose [-5 2 0 0]
+    color "green"
+)
+
+robot
+(
+    name "robot4"
+    pose [-2 2 0 0]
+    color "green"
+)
+
+robot
+(
+    name "robot5"
+    pose [0 0 0 0]
+    color "green"
+)
+
+robot
+(
+    name "robot6"
+    pose [2 -1 0 0]
+    color "green"
+    ranger_return 1
+)
+
+robot
+(
+    name "robot7"
+    pose [5 5 0 0]
+    color "green"
+)
+
+robot
+(
+    name "robot8"
+    pose [4 1 0 0]
+    color "green"
+)
+
+robot
+(
+    name "robot9"
+    pose [-6 -8 0 0]
+    color "green"
+)
+
+robot
+(
+    name "robot10"
+    pose [-1 -7 0 0]
+    color "green"
+)
+
+robot
+(
+    name "robot11"
+    pose [-6 1 0 0]
+    color "green"
+    ranger_return 1
+)
+
+robot
+(
+    name "robot12"
+    pose [-5 -5 0 0]
+    color "green"
+)
+
+robot
+(
+    name "robot13"
+    pose [-4 -1 0 0]
+    color "green"
+)
+
+robot
+(
+    name "robot14"
+    pose [2 2 0 0]
+    color "green"
+)
+
+robot
+(
+    name "robot15"
+    pose [1 4 0 0]
+    color "green"
+)
+
+robot
+(
+    name "robot16"
+    pose [2 -3 0 0]
+    color "green"
+    ranger_return 1
+)
+
+define oil model
+(
+    block (points 4
+      point[0] [1 0]
+      point[1] [1 1]
+      point[2] [0 1]
+      point[3] [0 0]
+      z [0 1]
+      )
+    size [0.1 0.2 1.2]
+	color "black"
+)
+
+oil(name "oil1" pose [-1 -5 0 0])
