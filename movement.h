@@ -35,17 +35,17 @@ namespace mkhsin035{
                 double& forward_speed,          //translational speed
                 double& turning_speed           //rotational speed
             );
-      void avoid_collisions(/*ccolision avoidance*/
+      void avoid_collisions(/*colision avoidance*/
                 robot& robo,                    //robot executing function
                 playerc_simulation_t *sim_proxy,//simulation proxy
                 double& forward_speed,          //translational speed
                 double& turning_speed           //rotational speed
             );  
       static double dist(   //returns distance between 2 points
-                double x,   //initial x coordinate
-                double y,   //initial y coordinate
-                double xf,  //final x coordinate
-                double yf   //final y coordinate
+                double x,   //initial x position
+                double y,   //initial y position
+                double xf,  //final x position
+                double yf   //final y position
             );
   };  
 };
