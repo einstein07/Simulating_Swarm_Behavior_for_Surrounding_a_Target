@@ -31,6 +31,7 @@ namespace mkhsin035{
             );
       void wander(
                 robot& robo,                    //robot executing function
+                playerc_simulation_t *sim_proxy,//simulation proxy
                 double& forward_speed,          //translational speed
                 double& turning_speed           //rotational speed
             );
