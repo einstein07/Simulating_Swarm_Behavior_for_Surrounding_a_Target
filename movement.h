@@ -19,27 +19,27 @@ namespace mkhsin035{
       double circle_diameter;   //diameter of circle being formed
       double min_dist_nearest;  //minimum allowable distance between robots 
   public:
-      movement(
+      movement(/*CONSTRUCTOR*/
                 double circle_diameter,
                 double Dmin
             );
-      void move(
+      void move( /*move to target*/
                 robot& robo,                    //robot executing function 
                 playerc_simulation_t *sim_proxy,//simulation proxy 
                 double& forward_speed,          //translational speed
                 double& turning_speed           //rotational speed
             );
-      void wander(
+      void wander(/*target coordinates unknown*/
                 robot& robo,                    //robot executing function
                 playerc_simulation_t *sim_proxy,//simulation proxy
                 double& forward_speed,          //translational speed
                 double& turning_speed           //rotational speed
             );
-      void avoid_collisions(
-                robot& robo,
-                playerc_simulation_t *sim_proxy,
-                double& forward_speed,
-                double& turning_speed
+      void avoid_collisions(/*ccolision avoidance*/
+                robot& robo,                    //robot executing function
+                playerc_simulation_t *sim_proxy,//simulation proxy
+                double& forward_speed,          //translational speed
+                double& turning_speed           //rotational speed
             );  
       static double dist(   //returns distance between 2 points
                 double x,   //initial x coordinate
