@@ -18,8 +18,13 @@ mkhsin035::movement::movement(double circle_diameter, double Dmin):circle_diamet
 void mkhsin035::movement::move(robot& robo, playerc_simulation_t *sim_proxy, double& forward_speed, double& turning_speed)
 {
     std::cout<<"move"<<std::endl;
-    double tspeed = 5;
+    //turning speed
+    double tspeed = 60;//5;
+    //forward speed
+    double fspeed = 0.8;
+    //allowable error margin for robot yaw
     int yaw_margin = 5;
+    //allowable diameter error margin
     int D_margin = 0.5;
     mkhsin035::pos robo_pos = robo.get_position(sim_proxy);
     if(robo.blob_proxy->blobs_count > 0)
@@ -49,10 +54,15 @@ void mkhsin035::movement::move(robot& robo, playerc_simulation_t *sim_proxy, dou
         if((opp < 0 && adjacent < 0) || (adjacent < 0))
         {
             desired_yaw = desired_yaw + DTOR(180);
+            if(desired_yaw > DTOR(180))
+            {
+                desired_yaw = desired_yaw - DTOR(360);
+            }
         }
         std::cout<<"desired yaw to reach target: "<<desired_yaw<<std::endl;
-        //std::cout<<"current robo yaw: "<<robo_pos.yaw<<std::endl;
+        std::cout<<"current robo yaw: "<<robo_pos.yaw<<std::endl;
         double Dt = dist(robo_pos.x, robo_pos.y, robo.oil_spill_position_x, robo.oil_spill_position_y);
+        //robot inside the circle
         if (Dt < (this->circle_diameter - D_margin))
         {
             if(robo_pos.yaw > (desired_yaw + DTOR(yaw_margin)))
@@ -67,11 +77,12 @@ void mkhsin035::movement::move(robot& robo, playerc_simulation_t *sim_proxy, dou
             }
             else
             {
-                forward_speed = -0.1;
+                forward_speed = (-1) * fspeed;//0.8;//-0.1;
                 turning_speed = 0;
             }
             
         }
+        //Robot outside the circle
         else if(Dt > (this->circle_diameter + D_margin)) 
         {
           if(robo_pos.yaw > (desired_yaw + DTOR(yaw_margin)))
@@ -86,11 +97,11 @@ void mkhsin035::movement::move(robot& robo, playerc_simulation_t *sim_proxy, dou
             }
             else
             {
-                forward_speed = 0.1;
+                forward_speed = fspeed;//0.8;//0.1;
                 turning_speed = 0;
             }  
         }
-        else
+        else//Robot on the circle
         {
          if(robo_pos.yaw > (desired_yaw + DTOR(yaw_margin)))
             {
@@ -122,6 +133,10 @@ void mkhsin035::movement::move(robot& robo, playerc_simulation_t *sim_proxy, dou
         if((opp < 0 && adjacent < 0) || (adjacent < 0))
         {
             desired_yaw = desired_yaw + DTOR(180);
+            if(desired_yaw > DTOR(180))
+            {
+                desired_yaw = desired_yaw - DTOR(360);
+            }
         }
         
         std::cout<<"desired yaw to reach target: "<<desired_yaw<<std::endl;
@@ -140,7 +155,7 @@ void mkhsin035::movement::move(robot& robo, playerc_simulation_t *sim_proxy, dou
             }
             else
             {
-                forward_speed = -0.1;
+                forward_speed = (-1) * fspeed;//0.8;
                 turning_speed = 0;
             }
             
@@ -159,7 +174,7 @@ void mkhsin035::movement::move(robot& robo, playerc_simulation_t *sim_proxy, dou
             }
             else
             {
-                forward_speed = 0.1;
+                forward_speed = fspeed;//0.1;
                 turning_speed = 0;
             }  
         }
@@ -198,32 +213,63 @@ void mkhsin035::movement::avoid_collisions(robot& robo, playerc_simulation_t *si
     if((opp < 0 && adjacent < 0) || (adjacent < 0))
     {
         neighbor_bearing = neighbor_bearing + DTOR(180);
+        
+        if(neighbor_bearing > DTOR(180))
+            {
+                neighbor_bearing = neighbor_bearing - DTOR(360);
+            }
     }
     double Dn = dist(robo_pos.x, robo_pos.y, robo.nearest_robot_x, robo.nearest_robot_y);
     //to move away from nearest neighbor we need to turn around and face opp direction to nearest neighbor
-    double desired_yaw = (-1) * neighbor_bearing;
-    double yaw_margin = 10;
-    double tspeed = 60;
-    double fspeed = 0.01;
+    double desired_yaw = 0.0;
+    double yaw_margin = 45;
+    double tspeed = 90;//10;
+    double fspeed = 0.5;
     if (Dn < this->min_dist_nearest)
     {
         std::cout<<"nearest neighbor coordinates: ("<<robo.nearest_robot_x<<","<<robo.nearest_robot_y<<")"<<std::endl;
         std::cout<<"distance to nearest: "<<Dn<<std::endl;
         
         
-            if(robo_pos.yaw > (desired_yaw + DTOR(yaw_margin)))
+            if((robo_pos.yaw - neighbor_bearing ) < DTOR(yaw_margin) && (robo_pos.yaw - neighbor_bearing) > (-1* DTOR(yaw_margin)))
             {
-                forward_speed = fspeed;
-                turning_speed = (-1) * tspeed;
+                //take a step back
+                std::cout<<"step back"<<std::endl;
+                forward_speed = (-1) * fspeed;
+                turning_speed = 0;
             }
-            else if (robo_pos.yaw < (desired_yaw - DTOR(yaw_margin)))
+            else if (((robo_pos.yaw - neighbor_bearing) < DTOR(yaw_margin + 180)) && ((robo_pos.yaw - neighbor_bearing) > DTOR(180 - yaw_margin)))
             {
+                //take a step forward
+                std::cout<<"step forward"<<std::endl;
                 forward_speed = fspeed;
+                turning_speed = 0;
+            }
+            else if (((robo_pos.yaw - neighbor_bearing) < DTOR(-180 + yaw_margin)) && ((robo_pos.yaw - neighbor_bearing) > DTOR(-180 - yaw_margin)))
+            {
+                //take a step forward
+                std::cout<<"step forward"<<std::endl;
+                forward_speed = fspeed;
+                turning_speed = 0;
+            }
+            else if ( (robo_pos.yaw - neighbor_bearing ) > DTOR(yaw_margin) && ((robo_pos.yaw - neighbor_bearing) < DTOR(180 - yaw_margin)) )
+            {
+                //turn left
+                std::cout<<"turn left!"<<std::endl;
+                forward_speed = 0.1;
                 turning_speed = tspeed;
+            }
+            else if ( ((robo_pos.yaw - neighbor_bearing) < (-1* DTOR(yaw_margin))) && ((robo_pos.yaw - neighbor_bearing) > DTOR(-180 + yaw_margin)) )
+            {
+                //turn left
+                std::cout<<"turn right!"<<std::endl;
+                forward_speed = 0.1;
+                turning_speed = (-1) * tspeed;
             }
             else
             {
-                forward_speed = fspeed;
+                std::cout<<"neeeeed another else statement"<<std::endl;
+                forward_speed = 0;
                 turning_speed = 0;
             }
         
