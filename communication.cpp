@@ -12,7 +12,7 @@
 //CODE
 //------------------------------------------------------------------------------
       
-    mkhsin035::comms::comms(){}
+    mkhsin035::comms::comms(double range):range(range){}
     void mkhsin035::comms::receive(mkhsin035::robot& robo, playerc_simulation_t *sim_proxy, double& bc_x, double& bc_y, double& oil_spill_position_x, double& oil_spill_position_y)
     {
         mkhsin035::pos robot_position = robo.get_position(sim_proxy);
@@ -95,7 +95,7 @@ void mkhsin035::comms::broadcast(robot& robo, playerc_simulation_t *sim_proxy, s
             dist = movement::dist(circleX, circleY, other_robot_positions[i].x, other_robot_positions[i].y);
                         
             // 
-            if(dist > 0 && dist < radius && !robo.is_self(robots[i]))
+            if(dist > 0 && dist < range && !robo.is_self(robots[i]))
             {
                 //std::cout<<robo.cfg_file_name<<" broadcasting to: "<<i<<" name: "<<robots[i].cfg_file_name<<std::endl;
                 comms::receive(robots[i], sim_proxy, robo.bc_x, robo.bc_y, robo.oil_spill_position_x, robo.oil_spill_position_y);
