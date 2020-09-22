@@ -7,28 +7,34 @@
 /* 
  * File:   communication.h
  * Author: Sindiso Mkhatshwa
- *
  * Created on 10 September 2020, 02:55
  */
 
 #ifndef COMMUNICATION_H
 #define COMMUNICATION_H
 #include "robot.h"
-#include <functional>
 namespace mkhsin035{
-
+//------------------------------------------------------------------------------
+//COMMUNICATION CLASS
+//------------------------------------------------------------------------------
   class comms{
   private:
-        //radius of the communication circle
-        double radius = 10;
+        double range;      //communication range
   public:
-        comms();
-        void receive(mkhsin035::robot& robo, playerc_simulation_t *sim_proxy, double& bc_x, double& bc_y, double& oil_spill_position_x, double& oil_spill_position_y);
-        void broadcast(mkhsin035::robot& robo, playerc_simulation_t *sim_proxy, std::vector<mkhsin035::robot> &robots);
-  };  
-  
+        comms(double range);                       //constructor
+        void receive(
+                    mkhsin035::robot& robo,         //receiving robot
+                    playerc_simulation_t *sim_proxy,//simulation proxy 
+                    double& bc_x, double& bc_y,     //received coordinates (Rj)
+                    double& oil_spill_position_x,   //received target coords 
+                    double& oil_spill_position_y
+                );
+        void broadcast(
+                    mkhsin035::robot& robo,                 //broadcasting robot
+                    playerc_simulation_t *sim_proxy,        //simulation proxy
+                    std::vector<mkhsin035::robot> &robots   //all robots in sim
+                );
+  };   
 };
-
-
 #endif /* COMMUNICATION_H */
 
