@@ -278,7 +278,7 @@ void mkhsin035::movement::avoid_collisions(robot& robo, playerc_simulation_t *si
 }
 
 
-void mkhsin035::movement::wander(robot& robo, double& forward_speed, double& turning_speed)
+void mkhsin035::movement::wander(robot& robo, playerc_simulation_t *sim_proxy, double& forward_speed, double& turning_speed)
 {
     srand(time(NULL));
     std::cout<<"wandering"<<std::endl;
