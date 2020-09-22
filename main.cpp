@@ -179,7 +179,7 @@ int main(int argc, char** argv) {
     srand(time(NULL));
     
     //Prepare comms
-    comms c;
+    comms c(10);
     movement moves(2, 1);
     while (true){
         //read from proxies
