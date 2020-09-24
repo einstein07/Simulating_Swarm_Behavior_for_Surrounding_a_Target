@@ -10,19 +10,18 @@ include "robot.inc"
 #--------------------------------------------------------------------------
 #code
 #--------------------------------------------------------------------------
-# configure the GUI window
+# GUI window size
 window
 (
-    #show_data 1
-    size [700 700]
-    scale 35
+    size [700 600]
+    scale 30
 )
 
 # load in our robots
 robot
 (
     name "robot1"
-    pose [-5 -4 0 0]
+    pose [-5 -4 0 90]
     color "green"
 
 )
@@ -30,9 +29,8 @@ robot
 robot
 (
     name "robot2"
-    pose [-4 -3 0 0]
+    pose [-4 -3 0 -45]
     color "green"
-    ranger_return 1
 )
 
 robot
@@ -45,21 +43,8 @@ robot
 robot
 (
     name "robot4"
-    pose [-2 2 0 0]
+    pose [-2 2 0 100]
     color "green"
-)
-
-define oil model
-(
-    block (points 4
-      point[0] [1 0]
-      point[1] [1 1]
-      point[2] [0 1]
-      point[3] [0 0]
-      z [0 1]
-      )
-    size [0.1 0.2 1.2]
-	color "black"
 )
 
 oil(name "oil1" pose [-1 -5 0 0])
