@@ -25,7 +25,7 @@ void mkhsin035::movement::move(robot& robo, playerc_simulation_t *sim_proxy, dou
     //allowable error margin for robot yaw
     int yaw_margin = 5;
     //allowable diameter error margin
-    int D_margin = 0.5;
+    int D_margin = 0.1;
     mkhsin035::pos robo_pos = robo.get_position(sim_proxy);
     if(robo.blob_proxy->blobs_count > 0)
     {
@@ -63,7 +63,7 @@ void mkhsin035::movement::move(robot& robo, playerc_simulation_t *sim_proxy, dou
         //std::cout<<"current robo yaw: "<<robo_pos.yaw<<std::endl;
         double Dt = dist(robo_pos.x, robo_pos.y, robo.oil_spill_position_x, robo.oil_spill_position_y);
         //robot inside the circle
-        if (Dt < (this->circle_diameter - D_margin))
+        if (Dt < ((this->circle_diameter/2) - D_margin))
         {
             if(robo_pos.yaw > (desired_yaw + DTOR(yaw_margin)))
             {
@@ -83,7 +83,7 @@ void mkhsin035::movement::move(robot& robo, playerc_simulation_t *sim_proxy, dou
             
         }
         //Robot outside the circle
-        else if(Dt > (this->circle_diameter + D_margin)) 
+        else if(Dt > ((this->circle_diameter/2) + D_margin)) 
         {
           if(robo_pos.yaw > (desired_yaw + DTOR(yaw_margin)))
             {
@@ -250,7 +250,7 @@ void mkhsin035::movement::wander(robot& robo, playerc_simulation_t *sim_proxy, d
         
         //std::cout<<"desired yaw to reach target: "<<desired_yaw<<std::endl;
         
-        if(D_temp < (this->circle_diameter - D_margin))
+        if(D_temp < ((this->circle_diameter/2) - D_margin))
         {
             if(robo_pos.yaw > (desired_yaw + DTOR(yaw_margin)))
             {
@@ -269,7 +269,7 @@ void mkhsin035::movement::wander(robot& robo, playerc_simulation_t *sim_proxy, d
             }
             
         }
-        else if(D_temp > (this->circle_diameter + D_margin)) 
+        else if(D_temp > ((this->circle_diameter/2) + D_margin)) 
         {
           if(robo_pos.yaw > (desired_yaw + DTOR(yaw_margin)))
             {
