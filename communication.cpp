@@ -20,7 +20,7 @@
         double Dj = movement::dist(robot_position.x, robot_position.y, bc_x, bc_y);
         if ((robot_position.x < bc_x + 0.15 && robot_position.x > bc_x - 0.15) && (robot_position.y < bc_y + 0.15 && robot_position.y > bc_y - 0.15))
         {
-            std::cout<<"receiving self"<<std::endl;
+            //std::cout<<"receiving self"<<std::endl;
             return;
         }
         else
@@ -57,7 +57,7 @@
     }
 void mkhsin035::comms::broadcast(robot& robo, playerc_simulation_t *sim_proxy, std::vector<mkhsin035::robot> &robots)
 {
-    std::cout<<"broadcast:start"<<std::endl;
+    //std::cout<<"broadcast:start"<<std::endl;
     mkhsin035::pos robot_position;
     mkhsin035::pos other_robot_positions[robots.size()];
     double circleX, circleY;
