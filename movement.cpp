@@ -31,7 +31,7 @@ void mkhsin035::movement::move(robot& robo, playerc_simulation_t *sim_proxy, dou
     {
         for (int i = 0; i < robo.blob_proxy->blobs_count; i++)
         {
-            if(robo.blob_proxy->blobs[i].color == 0)
+            if(robo.blob_proxy->blobs[i].color != 0)
             {
                 char name[5];
                 std::string oil = "oil1";
@@ -124,9 +124,9 @@ void mkhsin035::movement::move(robot& robo, playerc_simulation_t *sim_proxy, dou
 }
 
       
-void mkhsin035::movement::avoid_collisions(robot& robo, playerc_simulation_t *sim_proxy, double& forward_speed, double& turning_speed)
+void mkhsin035::movement::avoid_collisions(robot& robo, playerc_simulation_t *sim_proxy, playerc_ranger_t *sonar_proxy, double& forward_speed, double& turning_speed)
 {
-        
+    double *sp = sonar_proxy->ranges;    
     double margin = 10;
     mkhsin035::pos robo_pos = robo.get_position(sim_proxy);
         
@@ -196,6 +196,38 @@ void mkhsin035::movement::avoid_collisions(robot& robo, playerc_simulation_t *si
                 turning_speed = 0;
             }
         
+    }
+    else if(sp[2] < min_dist_nearest)
+    {
+        forward_speed = 0;
+        //turn right
+        turning_speed = (-1)*tspeed;
+        //printf("turning right - wall\n");
+        return;
+    }
+    else if(sp[3] < min_dist_nearest)
+    {
+        forward_speed = 0;
+        //turn left
+        turning_speed = tspeed;
+        //printf("turning left - wall\n");
+        return;
+    }
+    else if(sp[4] < min_dist_nearest)
+    {
+        forward_speed = fspeed;
+        turning_speed = tspeed;
+        printf("moving forward-wall\n");
+        return;
+    }
+    else if( (sp[0] < min_dist_nearest) && \
+             (sp[1] < min_dist_nearest))
+    {
+        //back off a little bit
+        forward_speed = (-1) * fspeed;
+        turning_speed = tspeed;  
+        printf("moving back - wall\n");
+        return;
     }
     return;
 }
