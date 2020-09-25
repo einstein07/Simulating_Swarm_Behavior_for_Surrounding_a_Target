@@ -83,6 +83,7 @@ namespace mkhsin035{
         bool is_self(
                         robot& other                    //robot
                     );
+        void refresh();
         void shutdown();
     };
 };

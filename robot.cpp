@@ -106,6 +106,17 @@
     {
         playerc_position2d_set_cmd_vel(this->p2d_proxy, forward_speed, 0.00, DTOR(turning_speed), 1);
     }
+    void mkhsin035::robot::refresh()
+    {
+        nearest_robot_x     = INFINITY;
+        nearest_robot_y     = INFINITY;
+        farthest_robot_x    = INFINITY;
+        farthest_robot_y    = INFINITY;
+        Dn                  = INFINITY;
+        Df                  = INFINITY;
+        bc_x                = INFINITY;
+        bc_y                = INFINITY;
+    }
     
     /* Shutdown */
     void mkhsin035::robot::shutdown()
