@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /* 
  * File:   robot.h
  * Author: Sindiso Mkhatshwa
@@ -13,9 +7,12 @@
 #ifndef ROBOT_H
 #define ROBOT_H
 #include <string> 
-#include <iostream>
+#include <thread>
 #include <vector>
 #include <math.h>
+#include <cstdlib>
+#include <iostream>
+#include <unistd.h>
 #include <functional>
 #include <bits/stdc++.h>
 #include <libplayerc/playerc.h>
@@ -59,6 +56,7 @@ namespace mkhsin035{
         //distances to farthest and nearest robots
         double Df; double Dn;
 //------------------------------------------------------------------------------
+        pos current_position;
         /*Constructors*/
         robot();             //default constructor
         robot(
@@ -73,7 +71,8 @@ namespace mkhsin035{
         void enable_motors();
         void set_motors(
                         double& forward_speed,//translational speed
-                        double& turning_speed //rotational speed  
+                        double& turning_speed, //rotational speed
+                        playerc_simulation_t *sim_proxy //player simulator proxy
                     );
         void request_geometries();
         void read_from_proxies();

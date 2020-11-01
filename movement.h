@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /* 
  * File:   movement.h
  * Author: Sindiso Mkhatshwa
@@ -37,7 +31,6 @@ namespace mkhsin035{
             );
       void avoid_collisions(/*colision avoidance*/
                 robot& robo,                    //robot executing function
-                playerc_simulation_t *sim_proxy,//simulation proxy
                 playerc_ranger_t *sonar_proxy,  //sonar proxy
                 double& forward_speed,          //translational speed
                 double& turning_speed           //rotational speed

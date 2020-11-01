@@ -24,14 +24,12 @@ namespace mkhsin035{
         comms(double range);                       //constructor
         void receive(
                     mkhsin035::robot& robo,         //receiving robot
-                    playerc_simulation_t *sim_proxy,//simulation proxy 
                     double& bc_x, double& bc_y,     //received coordinates (Rj)
                     double& oil_spill_position_x,   //received target coords 
                     double& oil_spill_position_y
                 );
         void broadcast(
                     mkhsin035::robot& robo,                 //broadcasting robot
-                    playerc_simulation_t *sim_proxy,        //simulation proxy
                     std::vector<mkhsin035::robot> &robots   //all robots in sim
                 );
   };   
