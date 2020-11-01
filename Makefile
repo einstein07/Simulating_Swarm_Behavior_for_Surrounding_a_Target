@@ -10,6 +10,6 @@ all:$(EXECUTABLE)
 	@echo Make has finished.
 
 $(EXECUTABLE):
-	$(CC) -o $@ $(CFLAGS) -g $(SOURCES) $(LDLIBS)
+	$(CC) -pthread -o $@ $(CFLAGS) -g $(SOURCES) $(LDLIBS)
 clean:
 	rm -f a.out core $(EXECUTABLE) *.o
