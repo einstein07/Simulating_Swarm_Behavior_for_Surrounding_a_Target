@@ -1,0 +1,62 @@
+# robot_5.world
+# world for the robot
+# Author: Sindiso Mkhatshwa
+# Date: 10 - 09 - 2020
+#--------------------------------------------------------------------------
+#includes
+#--------------------------------------------------------------------------
+include "map.inc"
+include "robot.inc"
+#--------------------------------------------------------------------------
+#code
+#--------------------------------------------------------------------------
+# configure the GUI window
+window
+(
+    size [700 600]
+    scale 30
+)
+floorplan
+(
+  bitmap "floorplan.png" 
+  size [25.000 25.000 1.500]
+)
+# load in our robots
+robot
+(
+    name "robot1"
+pose [10 -7 0 133]
+    color "green"
+
+)
+
+robot
+(
+    name "robot2"
+pose [-3 -11 0 -106]
+    color "green"
+)
+
+robot
+(
+    name "robot3"
+pose [-6 -6 0 -33]
+    color "green"
+)
+
+robot
+(
+    name "robot4"
+pose [-4 -1 0 43]
+    color "green"
+)
+
+robot
+(
+    name "robot5"
+pose [-3 10 0 91]
+    color "green"
+)
+
+
+oil(name "oil1" pose [0 0 0 0])
