@@ -69,6 +69,7 @@
         this->sonar_proxy = playerc_ranger_create(this->rob, 0);
         if (playerc_ranger_subscribe(this->sonar_proxy, PLAYER_OPEN_MODE))
             return -1;
+	std::cout<<"JUST CREATED SONAR"<<std::endl;
         this->p2d_proxy = playerc_position2d_create(this->rob, 0);
         if (playerc_position2d_subscribe(this->p2d_proxy, PLAYER_OPEN_MODE))
             return -1;
@@ -99,12 +100,18 @@
     {
         mkhsin035::pos position;
         playerc_simulation_get_pose2d(sim_proxy, cfg_file_name, &position.x, &position.y, &position.yaw);
+        this->current_position = position;
+        
         return position;
     }
 
-    void mkhsin035::robot::set_motors(double& forward_speed, double& turning_speed)
+    void mkhsin035::robot::set_motors(double& forward_speed, double& turning_speed, playerc_simulation_t *sim_proxy)
     {
         playerc_position2d_set_cmd_vel(this->p2d_proxy, forward_speed, 0.00, DTOR(turning_speed), 1);
+	usleep(10);//allow robot to take a step
+        forward_speed = 0; turning_speed = 0;
+        playerc_position2d_set_cmd_vel(this->p2d_proxy, forward_speed, 0.00, DTOR(turning_speed), 1);
+        this->current_position = this->get_position(sim_proxy);
     }
     void mkhsin035::robot::refresh()
     {
