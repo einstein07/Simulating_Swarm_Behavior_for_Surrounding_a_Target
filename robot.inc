@@ -26,14 +26,15 @@ define robot_sonars ranger
   robot_sonar( pose [ 0.25 -0.125 0 0]) #sonar infront,right
   robot_sonar( pose [ 0.125 0.25 0 30]) #sonar on left corner
   robot_sonar( pose [ 0.125 -0.25 0 -30]) #sonar on right corner
+  robot_sonar( pose [ -0.25 0 0 -180]) #sonar at the back
 )
 
 define robot_blobfinder blobfinder
 (
-	colors_count 1
-	colors ["black"]	 # color of an oil spill
+	colors_count 2
+	colors ["black" "amber"] # color of an oil spill
 	image [160 120] 	 # resolution
-	range 5.00 		 # meters
+	range 9.00 		 # meters
 	fov 60 			 # field of view
 )
 
